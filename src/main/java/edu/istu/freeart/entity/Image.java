@@ -21,7 +21,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -54,24 +56,53 @@ public class Image {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @JsonIgnore
     @Column(name = "is_activated", nullable = false)
     private Boolean isActivated;
 
     @Access(AccessType.PROPERTY)
-    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Column(name = "url", nullable = false)
     private String url;
 
     @Column(name = "upload_date", nullable = false)
     private LocalDateTime uploadDate;
 
+    @Transient
+    private Integer price;
+
+    @Transient
+    private Integer auctionCount;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "image_tag", joinColumns = @JoinColumn(name = "image_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
-    public String getUrl() {
-        return CustomConstants.IMAGE_FOLDER + url;
+    public void setUrl(String url) {
+        String[] split = url.split("/");
+        this.url = split[split.length - 1];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Image image = (Image) o;
+        return id.equals(image.id)
+                && title.equals(image.title)
+                && hash.equals(image.hash)
+                && creator.equals(image.creator)
+                && owner.equals(image.owner)
+                && description.equals(image.description)
+                && isActivated.equals(image.isActivated)
+                && url.equals(image.url)
+                && uploadDate.equals(image.uploadDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, hash, creator, owner, description, isActivated, url, uploadDate);
     }
 }

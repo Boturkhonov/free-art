@@ -1,14 +1,14 @@
 package edu.istu.freeart.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,6 +30,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class Auction {
+
+    public static String TYPE_NAME = "Auction";
 
     public static class Property {
 
@@ -63,24 +66,24 @@ public class Auction {
     private Integer price;
 
     @NotNull
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     private Image image;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "buyer_id")
     private User buyer;
 
     @NotNull
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id")
     private User seller;
 
-    @OneToMany(mappedBy = "auction")
-    private Set<Bid> bids;
+    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
+    private List<Bid> bids;
 
-    @OneToMany(mappedBy = "auction")
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     @Override
     public boolean equals(Object o) {

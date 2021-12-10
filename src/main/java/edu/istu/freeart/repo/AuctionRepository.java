@@ -8,11 +8,17 @@ import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
+
     Integer countAllBySellerAndBuyer(@NotNull User seller, User buyer);
-    List<Auction> findAllByBuyerAndImage(User buyer, @NotNull Image image);
-    List<Auction> findAllBySeller(User seller);
+
+    List<Auction> findAllByBuyerAndImageOrderByEndDate(User buyer, @NotNull Image image);
+
+    List<Auction> findAllByBuyerNotNull();
+
+    List<Auction> findAllBySellerAndBuyer(@NotNull User seller, User buyer);
+
+    Integer countAllByImage(@NotNull Image image);
 }

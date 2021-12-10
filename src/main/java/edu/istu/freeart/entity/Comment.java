@@ -29,8 +29,9 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class Comment {
 
+    public static final String TYPE_NAME = "Comment";
+
     @Id
-    @NotNull
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

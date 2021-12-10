@@ -1,6 +1,5 @@
 package edu.istu.freeart.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.istu.freeart.util.CustomConstants;
 import lombok.AccessLevel;
@@ -13,8 +12,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
@@ -34,6 +32,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class User {
+
+    public static final String TYPE_NAME = "User";
 
     public static class Property {
 
@@ -78,13 +78,14 @@ public class User {
     @Column(name = "points", nullable = false)
     private Integer points;
 
-    @NotNull
-    @Column(name = "role", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") })
+    private Set<Role> roles;
 
     @Access(AccessType.PROPERTY)
-    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Column(name = "avatar_url", nullable = false)
     private String avatarUrl;
 
@@ -100,6 +101,9 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "follower_id") })
     private Set<User> followers;
 
+    @Transient
+    private Long collectionPrice;
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -109,16 +113,12 @@ public class User {
         User user = (User) o;
         return id.equals(user.id)
                 && login.equals(user.login)
-                && password.equals(user.password)
-                && about.equals(user.about)
-                && points.equals(user.points)
-                && role == user.role
-                && avatarUrl.equals(user.avatarUrl);
+                && password.equals(user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, about, points, role, avatarUrl);
+        return Objects.hash(id, login, password);
     }
 
     @Override
@@ -137,15 +137,15 @@ public class User {
                 + '\''
                 + ", points="
                 + points
-                + ", role="
-                + role
                 + ", avatarName='"
                 + avatarUrl
                 + '\''
                 + '}';
     }
 
-    public String getAvatarUrl() {
-        return CustomConstants.AVATAR_FOLDER + avatarUrl;
+    public void setAvatarUrl(String avatarUrl) {
+        String[] split = avatarUrl.split("/");
+        this.avatarUrl = split[split.length - 1];
     }
+
 }

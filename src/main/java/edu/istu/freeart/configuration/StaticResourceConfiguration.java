@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class StaticResourceConfiguration implements WebMvcConfigurer {
 
-    @Value("${edu.istu.upload-directory}")
+    @Value("${edu.istu.free-art.upload-directory}")
     private String uploadUrl;
 
     @Override

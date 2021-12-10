@@ -68,8 +68,19 @@ CREATE TABLE "user"
     password   varchar(255)     NOT NULL,
     about      text             NOT NULL DEFAULT '',
     points     int              NOT NULL,
-    role       varchar(32)      NOT NULL,
     avatar_url varchar(512)     NOT NULL
+);
+
+CREATE TABLE role
+(
+    id   bigserial unique NOT NULL,
+    name varchar(32)      NOT NULL
+);
+
+CREATE TABLE user_role
+(
+    user_id bigint NOT NULL,
+    role_id bigint NOT NULL
 );
 
 --
@@ -86,6 +97,8 @@ alter table only image
 alter table only tag
     add primary key (id);
 alter table only "user"
+    add primary key (id);
+alter table only role
     add primary key (id);
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -118,6 +131,11 @@ ALTER TABLE ONLY image
     ADD CONSTRAINT image_owner_id_fk FOREIGN KEY (owner_id) REFERENCES "user" (id);
 
 ALTER TABLE ONLY image_tag
-    ADD CONSTRAINT image_tag_tag_id_fk FOREIGN KEY (tag_id) REFERENCES tag (id);
+    ADD CONSTRAINT image_tag_tag_id_fk FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE;
 ALTER TABLE ONLY image_tag
-    ADD CONSTRAINT image_tag_image_id_fk FOREIGN KEY (image_id) REFERENCES image (id);
+    ADD CONSTRAINT image_tag_image_id_fk FOREIGN KEY (image_id) REFERENCES image (id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY user_role
+    ADD CONSTRAINT user_role_user_id_fk FOREIGN KEY (user_id) REFERENCES "user" (id);
+ALTER TABLE ONLY user_role
+    ADD CONSTRAINT user_role_role_id_fk FOREIGN KEY (role_id) REFERENCES role (id);

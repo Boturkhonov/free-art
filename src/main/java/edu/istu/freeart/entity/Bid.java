@@ -30,7 +30,6 @@ import java.time.LocalDateTime;
 public class Bid {
 
     @Id
-    @NotNull
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

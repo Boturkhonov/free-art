@@ -11,9 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
-    Integer countAllByCreatorAndIsActivated(@NotNull User creator, @NotNull Boolean isActivated);
-    List<Image> findAllByCreator(@NotNull User creator);
-    List<Image> findAllByOwner(@NotNull User owner);
+    Integer countAllByOwnerAndIsActivated(@NotNull User owner, @NotNull Boolean isActivated);
+    List<Image> findAllByCreatorAndIsActivated(User creator, Boolean isActivated);
+    List<Image> findAllByOwnerAndIsActivated(User owner, Boolean isActivated);
     List<Image> findAllByIsActivated(Boolean isActivated);
     Optional<Image> findByIdAndIsActivated(Long id, Boolean isActivated);
+    Optional<Image> findByHash(String hash);
 }

@@ -2,8 +2,8 @@ package edu.istu.freeart.util;
 
 public class CustomConstants {
 
-    public static final String AVATAR_FOLDER = "localhost:8080/uploads/avatars/";
+    public static final String DEFAULT_IMAGE_NAME = "default.png";
 
-    public static final String IMAGE_FOLDER = "localhost:8080/uploads/images/";
+    public static final Integer DEFAULT_POINTS_COUNT = 1000;
 
 }
